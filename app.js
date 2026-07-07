@@ -8,8 +8,17 @@
     day: "numeric",
   });
 
-  // ── Render today's quote ────────────────────
-  const note = (window.TODAYS_NOTE) || { quote: "Add a quote in quote-data.js", author: "" };
+  // ── Pick today's quote automatically ────────
+  // Cycles through the QUOTES list by day-of-year, so you add a
+  // batch of quotes once and never have to touch this daily.
+  const quotesList = (window.QUOTES && window.QUOTES.length)
+    ? window.QUOTES
+    : [{ quote: "Add some quotes in quote-data.js", author: "" }];
+
+  const startOfYear = new Date(today.getFullYear(), 0, 0);
+  const dayOfYear = Math.floor((today - startOfYear) / 86400000);
+  const note = quotesList[dayOfYear % quotesList.length];
+
   document.getElementById("quoteText").textContent = note.quote;
   document.getElementById("authorText").textContent = note.author || "";
 
@@ -74,9 +83,11 @@
   })();
 
   // ── OneSignal push notifications ────────────
-  // OneSignal registers its own service worker below (see serviceWorkerPath/serviceWorkerParam),
-  // using the App ID you got from onesignal.com → Settings → Keys & IDs.
-  const ONESIGNAL_APP_ID = "6c1172f4-97f3-4f17-80d4-5f6b83272aac";
+  // (OneSignal registers the service worker itself below — see serviceWorkerPath/serviceWorkerParam)
+  // 1. Create a free account at https://onesignal.com
+  // 2. Add a "Web Push" app, choose "Typical Site"
+  // 3. Copy your App ID and paste it below
+  const ONESIGNAL_APP_ID = "REPLACE-WITH-YOUR-ONESIGNAL-APP-ID";
 
   const notifyBtn = document.getElementById("notifyBtn");
   const notifyBtnText = document.getElementById("notifyBtnText");
