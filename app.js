@@ -98,7 +98,7 @@
     }
 
     await OneSignal.init({
-      appId: ONESIGNAL_APP_ID,
+      appId: 6c1172f4-97f3-4f17-80d4-5f6b83272aac,
       allowLocalhostAsSecureOrigin: true,
     });
 
