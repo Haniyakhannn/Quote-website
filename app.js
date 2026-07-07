@@ -73,17 +73,9 @@
     renderStreak(streak);
   })();
 
-  // ── Register service worker (offline + push) ──
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-      navigator.serviceWorker.register("/OneSignalSDKWorker.js").catch(() => {});
-    });
-  }
-
   // ── OneSignal push notifications ────────────
-  // 1. Create a free account at https://onesignal.com
-  // 2. Add a "Web Push" app, choose "Typical Site"
-  // 3. Copy your App ID and paste it below
+  // OneSignal registers its own service worker below (see serviceWorkerPath/serviceWorkerParam),
+  // using the App ID you got from onesignal.com → Settings → Keys & IDs.
   const ONESIGNAL_APP_ID = "6c1172f4-97f3-4f17-80d4-5f6b83272aac";
 
   const notifyBtn = document.getElementById("notifyBtn");
@@ -96,14 +88,17 @@
       notifyBtn.disabled = true;
       return;
     }
-    const basePath = window.location.pathname.replace(/[^/]*$/, "");
 
-  await OneSignal.init({
-    appId: ONESIGNAL_APP_ID,
-    allowLocalhostAsSecureOrigin: true,
-    serviceWorkerPath: "OneSignalSDKWorker.js",
-    serviceWorkerParam: { scope: basePath },
-});
+    // Your site lives in a subfolder (e.g. haniyakhannn.github.io/Quote-website/)
+    // rather than at the domain root, so OneSignal needs to be told exactly
+    // where to find the service worker and what URL scope it should control.
+    const basePath = window.location.pathname.replace(/[^/]*$/, ""); // e.g. "/Quote-website/"
+
+    await OneSignal.init({
+      appId: ONESIGNAL_APP_ID,
+      allowLocalhostAsSecureOrigin: true,
+      serviceWorkerPath: "OneSignalSDKWorker.js",
+      serviceWorkerParam: { scope: basePath },
     });
 
     function reflectPermission() {
