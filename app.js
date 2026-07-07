@@ -96,10 +96,14 @@
       notifyBtn.disabled = true;
       return;
     }
+    const basePath = window.location.pathname.replace(/[^/]*$/, "");
 
-    await OneSignal.init({
-      appId: 6c1172f4-97f3-4f17-80d4-5f6b83272aac,
-      allowLocalhostAsSecureOrigin: true,
+  await OneSignal.init({
+    appId: ONESIGNAL_APP_ID,
+    allowLocalhostAsSecureOrigin: true,
+    serviceWorkerPath: "OneSignalSDKWorker.js",
+    serviceWorkerParam: { scope: basePath },
+});
     });
 
     function reflectPermission() {
