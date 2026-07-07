@@ -1,0 +1,50 @@
+name: Send daily note reminders
+
+on:
+  schedule:
+    # Two starting points split the window in half:
+    # Slot 1: 11:00 UTC = 4:00 PM Karachi  → random time in 4:00–7:15 PM
+    # Slot 2: 14:15 UTC = 7:15 PM Karachi  → random time in 7:15–10:30 PM
+    - cron: "0 11 * * *"
+    - cron: "15 14 * * *"
+  workflow_dispatch: {} # manual test run from the Actions tab — sends immediately, no wait
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Work out which slot this is, and wait a random amount of time
+        run: |
+          if [ "${{ github.event.schedule }}" = "15 14 * * *" ]; then
+            SLOT=2
+          else
+            SLOT=1
+          fi
+          echo "SLOT=$SLOT" >> "$GITHUB_ENV"
+
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            MINUTES=$(( RANDOM % 196 )) # 0–195 minutes = up to 3h15m, fits each half of the window
+            echo "Slot $SLOT: waiting $MINUTES minutes before sending..."
+            sleep "$((MINUTES * 60))"
+          fi
+
+      - name: Send push via OneSignal
+        run: |
+          if [ "$SLOT" = "2" ]; then
+            HEADING="still here for you 💌"
+            CONTENT="in case you needed this later today"
+          else
+            HEADING="for you 💌"
+            CONTENT="there'\''s something waiting for you"
+          fi
+
+          curl -X POST "https://onesignal.com/api/v1/notifications" \
+            -H "Authorization: Key ${{ secrets.ONESIGNAL_API_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "app_id": "${{ secrets.ONESIGNAL_APP_ID }}",
+              "included_segments": ["Subscribed Users"],
+              "headings": {"en": "'"$HEADING"'"},
+              "contents": {"en": "'"$CONTENT"'"},
+              "url": "${{ secrets.SITE_URL }}"
+            }'
