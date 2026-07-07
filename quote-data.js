@@ -8,13 +8,13 @@
 // ─────────────────────────────────────────────────────────
 
 const QUOTES = [
-  { quote: "You are exactly where you need to be. Keep going, gently.", author: "" },
-  { quote: "Rest counts as progress too.", author: "" },
+  { quote: "You are exactly where you need to be. Keep going.", author: "" },
+  { quote: "I am proud of you.", author: "" },
   { quote: "Small steps still move you forward.", author: "" },
-  { quote: "You don't have to have it all figured out today.", author: "" },
+  { quote: ".", author: "" },
   { quote: "Be proud of how far you've come.", author: "" },
-  { quote: "It's okay to take the scenic route.", author: "" },
-  { quote: "You're allowed to outgrow who you used to be.", author: "" },
+  { quote: "You are doing great, keep up the hard work.", author: "" },
+  { quote: "Be proud of yourself", author: "" },
 ];
 
 // Do not edit below this line
