@@ -84,7 +84,7 @@
   // 1. Create a free account at https://onesignal.com
   // 2. Add a "Web Push" app, choose "Typical Site"
   // 3. Copy your App ID and paste it below
-  const ONESIGNAL_APP_ID = "REPLACE-WITH-YOUR-ONESIGNAL-APP-ID";
+  const ONESIGNAL_APP_ID = "6c1172f4-97f3-4f17-80d4-5f6b83272aac";
 
   const notifyBtn = document.getElementById("notifyBtn");
   const notifyBtnText = document.getElementById("notifyBtnText");
